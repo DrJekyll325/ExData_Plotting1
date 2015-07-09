@@ -1,8 +1,9 @@
 plot3 <- function()
 {
 	##	Get the file path and file name for the text file provided
-	filePath <- ("C:/Users/DrJekyll325/Documents/R/Exploratory Data Analysis/Course Project 1/")
-	fileName <- paste(filePath, "household_power_consumption.txt", sep = "")
+	filePath <- ("C:/Users/DrJekyll325/Documents/R/Exploratory Data Analysis/Course Project 1")
+	fileName <- "household_power_consumption.txt"
+	setwd(filePath)
 
 
 	##	Use the data.table library to read the power consumption data from the
@@ -18,13 +19,9 @@ plot3 <- function()
 	rm(dtConsumption)
 
 
-	##	Update data types and create new column named DateTime based on Date
-	##	and Time columns
+	##	Update the data types for the columns used in this plot and create new
+	##	column named DateTime based on Date and Time columns
 	dfConsumption[, "Date"] <- as.Date(dfConsumption[, "Date"], "%d/%m/%Y")
-	dfConsumption[, "Global_active_power"] <- as.numeric(dfConsumption[, "Global_active_power"])
-	dfConsumption[, "Global_reactive_power"] <- as.numeric(dfConsumption[, "Global_reactive_power"])
-	dfConsumption[, "Voltage"] <- as.numeric(dfConsumption[, "Voltage"])
-	dfConsumption[, "Global_intensity"] <- as.numeric(dfConsumption[, "Global_intensity"])
 	dfConsumption[, "Sub_metering_1"] <- as.numeric(dfConsumption[, "Sub_metering_1"])
 	dfConsumption[, "Sub_metering_2"] <- as.numeric(dfConsumption[, "Sub_metering_2"])
 	dfConsumption[, "Sub_metering_3"] <- as.numeric(dfConsumption[, "Sub_metering_3"])
@@ -37,13 +34,15 @@ plot3 <- function()
 	yrange <- range(c(dfConsumption[, "Sub_metering_1"], dfConsumption[, "Sub_metering_2"], dfConsumption[, "Sub_metering_3"]))
 
 
-	##	Create a plot with no data, only axes and the legend
+	##	Open the destination file and create a plot with no data, only axes and the legend
+	png("plot3.png", width = 480, height = 480,units = "px")
 	plot(xrange, yrange, type = "n", xlab = "", ylab = "Energy sub metering")
-	legend('topright', lty = 1, c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"), col = c("black", "red", "blue"), cex = 0.7)
+	legend('topright', lty = 1, c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"), col = c("black", "red", "blue"), cex = 0.95)
 
 
-	##	Add the three lines for Energy Sub Metering over the Date/Time range
+	##	Add the three lines for Energy Sub Metering over the Date/Time range and close the file
 	lines(dfConsumption[, "DateTime"], dfConsumption[, "Sub_metering_1"], col = "black")
 	lines(dfConsumption[, "DateTime"], dfConsumption[, "Sub_metering_2"], col = "red")
 	lines(dfConsumption[, "DateTime"], dfConsumption[, "Sub_metering_3"], col = "blue")
+	dev.off()
 }

@@ -1,8 +1,9 @@
 plot2 <- function()
 {
 	##	Get the file path and file name for the text file provided
-	filePath <- ("C:/Users/DrJekyll325/Documents/R/Exploratory Data Analysis/Course Project 1/")
-	fileName <- paste(filePath, "household_power_consumption.txt", sep = "")
+	filePath <- ("C:/Users/DrJekyll325/Documents/R/Exploratory Data Analysis/Course Project 1")
+	fileName <- "household_power_consumption.txt"
+	setwd(filePath)
 
 
 	##	Use the data.table library to read the power consumption data from the
@@ -18,16 +19,10 @@ plot2 <- function()
 	rm(dtConsumption)
 
 
-	##	Update data types and create new column named DateTime based on Date
-	##	and Time columns
+	##	Update the data types for the columns used in this plot and create new
+	##	column named DateTime based on Date and Time columns
 	dfConsumption[, "Date"] <- as.Date(dfConsumption[, "Date"], "%d/%m/%Y")
 	dfConsumption[, "Global_active_power"] <- as.numeric(dfConsumption[, "Global_active_power"])
-	dfConsumption[, "Global_reactive_power"] <- as.numeric(dfConsumption[, "Global_reactive_power"])
-	dfConsumption[, "Voltage"] <- as.numeric(dfConsumption[, "Voltage"])
-	dfConsumption[, "Global_intensity"] <- as.numeric(dfConsumption[, "Global_intensity"])
-	dfConsumption[, "Sub_metering_1"] <- as.numeric(dfConsumption[, "Sub_metering_1"])
-	dfConsumption[, "Sub_metering_2"] <- as.numeric(dfConsumption[, "Sub_metering_2"])
-	dfConsumption[, "Sub_metering_3"] <- as.numeric(dfConsumption[, "Sub_metering_3"])
 	dfConsumption[, "DateTime"] <- paste(dfConsumption[, "Date"], dfConsumption[, "Time"], sep = " ")
 	dfConsumption[, "DateTime"] <- as.POSIXct(dfConsumption[, "DateTime"])
 
@@ -37,10 +32,12 @@ plot2 <- function()
 	yrange <- range(dfConsumption[, "Global_active_power"])
 
 
-	##	Create a plot with no data, only axes
+	##	Open the destination file and create a plot with no data, only axes
+	png("plot2.png", width = 480, height = 480,units = "px")
 	plot(xrange, yrange, type = "n", xlab = "", ylab = "Global Active Power (kilowatts)")
 
 
-	##	Add the line for Global Active Power over the Date/Time range
+	##	Add the line for Global Active Power over the Date/Time range and close the file
 	lines(dfConsumption[, "DateTime"], dfConsumption[, "Global_active_power"])
+	dev.off()
 }

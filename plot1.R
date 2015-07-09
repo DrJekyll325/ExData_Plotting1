@@ -1,8 +1,9 @@
 plot1 <- function()
 {
 	##	Get the file path and file name for the text file provided
-	filePath <- ("C:/Users/DrJekyll325/Documents/R/Exploratory Data Analysis/Course Project 1/")
-	fileName <- paste(filePath, "household_power_consumption.txt", sep = "")
+	filePath <- ("C:/Users/DrJekyll325/Documents/R/Exploratory Data Analysis/Course Project 1")
+	fileName <- "household_power_consumption.txt"
+	setwd(filePath)
 
 
 	##	Use the data.table library to read the power consumption data from the
@@ -18,21 +19,13 @@ plot1 <- function()
 	rm(dtConsumption)
 
 
-	##	Update data types and create new column named DateTime based on Date
-	##	and Time columns
-	dfConsumption[, "Date"] <- as.Date(dfConsumption[, "Date"], "%d/%m/%Y")
+	##	Update the data type for the column used in this plot
 	dfConsumption[, "Global_active_power"] <- as.numeric(dfConsumption[, "Global_active_power"])
-	dfConsumption[, "Global_reactive_power"] <- as.numeric(dfConsumption[, "Global_reactive_power"])
-	dfConsumption[, "Voltage"] <- as.numeric(dfConsumption[, "Voltage"])
-	dfConsumption[, "Global_intensity"] <- as.numeric(dfConsumption[, "Global_intensity"])
-	dfConsumption[, "Sub_metering_1"] <- as.numeric(dfConsumption[, "Sub_metering_1"])
-	dfConsumption[, "Sub_metering_2"] <- as.numeric(dfConsumption[, "Sub_metering_2"])
-	dfConsumption[, "Sub_metering_3"] <- as.numeric(dfConsumption[, "Sub_metering_3"])
-	dfConsumption[, "DateTime"] <- paste(dfConsumption[, "Date"], dfConsumption[, "Time"], sep = " ")
-	dfConsumption[, "DateTime"] <- as.POSIXct(dfConsumption[, "DateTime"])
 
 
-	##	Create a histogram
+	##	Create a histogram and write it to plot1.png
+	png("plot1.png", width = 480, height = 480,units = "px")
 	hist(as.numeric(dfConsumption$Global_active_power), col = "red", breaks = 15, ylim = c(0, 1200),
 		main = "Global Active Power", xlab = "Global Active Power (kilowatts)")
+	dev.off()
 }
